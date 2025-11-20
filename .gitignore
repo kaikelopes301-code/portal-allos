@@ -1,4 +1,8 @@
+# Arquivos grandes
 projeto.zip
-# ou, se quiser ignorar todos os zips:
- *.zip
- .env
+*.zip
+
+# Variaveis de ambiente
+.env
+.env.local
+*.env
