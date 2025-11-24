@@ -1,177 +1,123 @@
 """
-Portal Performance - Atlas Inovações
-Aplicação principal do portal Streamlit
+Portal Performance - Entry Point
+=================================
+Aplicação principal do portal de faturamento Atlas.
+Design System v2.0 - Professional Edition
 """
 
 import os
 import sys
 import warnings
 
-# Suprimir avisos que não impactam a UI
+import streamlit as st
+
+# Suppress non-critical warnings
 warnings.filterwarnings("ignore", message=".*Data Validation extension is not supported.*")
 warnings.filterwarnings("ignore", message=".*Unknown extension is not supported.*")
 
-# Garantir import do projeto
+# Ensure project root is in path
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-import streamlit as st
-
-# Configuração da página
+# Page configuration - must be first Streamlit command
 st.set_page_config(
-    page_title="Portal Performance | Atlas Inovações",
+    page_title="Portal Performance | Atlas",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Get Help': 'mailto:kaike.costa@atlasinovacoes.com.br',
-        'About': "Portal Performance v2.0 - Atlas Inovações"
+        'Get Help': 'mailto:Kaike.costa@atlasinovacoes.com.br',
+        'Report a bug': 'mailto:Kaike.costa@atlasinovacoes.com.br',
+        'About': '''
+        ## Portal Performance v2.0
+        
+        Sistema de gestão de relatórios de faturamento.
+        
+        **Desenvolvido por:** Atlas Inovações
+        '''
     }
 )
 
-# Redireciona para a primeira página (Execução)
+# Redirect to main page for better UX
 try:
     st.switch_page("pages/1_Execução.py")
 except Exception:
-    # Fallback caso o redirect não funcione
-    from portal_streamlit.utils.ui import inject_global_styles, render_sidebar_branding, COLORS
+    # Fallback: show loading screen with branding
+    from portal_streamlit.utils.ui import COLORS
     
-    inject_global_styles()
-    render_sidebar_branding()
-    
-    # Tela de boas-vindas
     st.markdown(f"""
-    <div style="
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    
+    .loading-container {{
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 60vh;
+        min-height: 80vh;
         text-align: center;
-        padding: 2rem;
-    ">
-        <div style="font-size: 5rem; margin-bottom: 1rem;">📊</div>
-        
-        <h1 style="
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, {COLORS['primary']} 0%, {COLORS['secondary']} 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0 0 1rem 0;
-        ">Portal Performance</h1>
-        
-        <p style="
-            color: {COLORS['text_secondary']};
-            font-size: 1.2rem;
-            max-width: 600px;
-            line-height: 1.8;
-            margin: 0 0 2rem 0;
-        ">
-            Sistema de automação para envio de medições mensais de shoppings.
-            Gerencie, visualize e envie relatórios de forma rápida e segura.
-        </p>
-        
-        <div style="
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        ">
-            <a href="/Execução" style="
-                background: linear-gradient(135deg, {COLORS['primary']} 0%, {COLORS['secondary']} 100%);
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 12px;
-                text-decoration: none;
-                font-weight: 600;
-                box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-            ">⚡ Iniciar Execução</a>
-            
-            <a href="/Preview" style="
-                background: transparent;
-                color: {COLORS['text_primary']};
-                padding: 1rem 2rem;
-                border-radius: 12px;
-                text-decoration: none;
-                font-weight: 600;
-                border: 2px solid {COLORS['border']};
-            ">👁️ Ver Previews</a>
-        </div>
+        background-color: {COLORS['background']};
+    }}
+    
+    .loading-logo {{
+        width: 80px;
+        height: 80px;
+        background: {COLORS['primary']};
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 1.5rem;
+        animation: pulse 2s infinite;
+    }}
+    
+    .loading-title {{
+        font-family: 'Inter', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: {COLORS['text_primary']};
+        margin-bottom: 0.5rem;
+    }}
+    
+    .loading-subtitle {{
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        color: {COLORS['text_secondary']};
+        margin-bottom: 2rem;
+    }}
+    
+    .loading-spinner {{
+        width: 40px;
+        height: 40px;
+        border: 3px solid {COLORS['divider']};
+        border-top: 3px solid {COLORS['primary']};
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }}
+    
+    @keyframes spin {{
+        0% {{ transform: rotate(0deg); }}
+        100% {{ transform: rotate(360deg); }}
+    }}
+    
+    @keyframes pulse {{
+        0%, 100% {{ transform: scale(1); opacity: 1; }}
+        50% {{ transform: scale(1.05); opacity: 0.8; }}
+    }}
+    </style>
+    
+    <div class="loading-container">
+        <div class="loading-logo">📊</div>
+        <h1 class="loading-title">Portal Performance</h1>
+        <p class="loading-subtitle">Carregando sistema...</p>
+        <div class="loading-spinner"></div>
     </div>
     """, unsafe_allow_html=True)
     
-    # Cards de funcionalidades
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown(f"""
-        <div style="
-            background: {COLORS['bg_card']};
-            border: 1px solid {COLORS['border']};
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-        ">
-            <span style="font-size: 2rem;">⚡</span>
-            <h4 style="color: {COLORS['text_primary']}; margin: 0.5rem 0;">Execução</h4>
-            <p style="color: {COLORS['text_secondary']}; font-size: 0.85rem; margin: 0;">
-                Envie medições
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown(f"""
-        <div style="
-            background: {COLORS['bg_card']};
-            border: 1px solid {COLORS['border']};
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-        ">
-            <span style="font-size: 2rem;">👁️</span>
-            <h4 style="color: {COLORS['text_primary']}; margin: 0.5rem 0;">Preview</h4>
-            <p style="color: {COLORS['text_secondary']}; font-size: 0.85rem; margin: 0;">
-                Visualize e-mails
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown(f"""
-        <div style="
-            background: {COLORS['bg_card']};
-            border: 1px solid {COLORS['border']};
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-        ">
-            <span style="font-size: 2rem;">⚙️</span>
-            <h4 style="color: {COLORS['text_primary']}; margin: 0.5rem 0;">Config</h4>
-            <p style="color: {COLORS['text_secondary']}; font-size: 0.85rem; margin: 0;">
-                Personalize
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown(f"""
-        <div style="
-            background: {COLORS['bg_card']};
-            border: 1px solid {COLORS['border']};
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-        ">
-            <span style="font-size: 2rem;">📋</span>
-            <h4 style="color: {COLORS['text_primary']}; margin: 0.5rem 0;">Logs</h4>
-            <p style="color: {COLORS['text_secondary']}; font-size: 0.85rem; margin: 0;">
-                Histórico
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+    # Force page reload after brief delay
+    import time
+    time.sleep(1)
+    st.rerun()
