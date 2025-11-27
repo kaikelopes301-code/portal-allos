@@ -462,32 +462,60 @@ class Emailer:
                         new_row[ck] = v
                 row = new_row
 
-                # Formata colunas monetárias e de porcentagem (com exceção específica)
-                for k in list(row.keys()):
-                    if k in self.TABLE_MONEY_COLUMNS:
-                        val = row.get(k)
 
+                # Formata colunas de mês para MM/AAAA
+                for k in list(row.keys()):
+                    if k in ["Mês de referência para faturamento", "Mês de emissão da NF"]:
+                        val = row.get(k)
+                        if val:
+                            vstr = str(val)
+                            # LOG TEMPORÁRIO: printa o valor bruto para debug
+                            if k == "Mês de referência para faturamento":
+                                print(f"[DEBUG] Valor bruto '{k}': {vstr}")
+                            import re
+                            from utils import parse_year_month
+                            
+                            # Se já estiver no formato MM/YY (ex: 11/25), mantemos
+                            if re.match(r"^\d{2}/\d{2}$", vstr):
+                                row[k] = vstr
+                            # Se estiver no formato "Janeiro/2025" (contém letras), mantemos
+                            elif any(c.isalpha() for c in vstr):
+                                row[k] = vstr
+                            else:
+                                # Tenta parsear e converter para MM/YY se necessário, 
+                                # mas como o processor já manda formatado, aqui é só fallback
+                                parsed = parse_year_month(vstr)
+                                if parsed:
+                                    # Converte YYYY-MM para MM/YY
+                                    try:
+                                        y, m = parsed.split('-')
+                                        row[k] = f"{m}/{y[2:]}"
+                                    except:
+                                        row[k] = vstr
+                                else:
+                                    # Fallback seguro
+                                    row[k] = vstr
+                        else:
+                            row[k] = ""
+                    elif k in self.TABLE_MONEY_COLUMNS:
+                        val = row.get(k)
                         if k == "Desconto SLA Retroativo":
-                            # quando vazio/pendente, manter célula vazia (sem chip); senão, preservar texto da planilha
                             if _is_missing_like_local(val):
                                 row[k] = ""
                             else:
                                 s = str(val).strip()
                                 row[k] = s
                             continue
-
                         if _is_missing_like_local(val):
                             row[k] = "" if val is None else str(val).strip()
                         else:
                             s = str(val).strip()
                             row[k] = s if s.startswith("R$") else fmt_brl(val)
-                    
                     elif k in self.TABLE_PERCENTAGE_COLUMNS:
                         val = row.get(k)
                         if _is_missing_like_local(val):
                             row[k] = "" if val is None else str(val).strip()
                         else:
-                            # Sempre normaliza via fmt_percentage para corrigir casos como "0,02%" -> "2,00%"
                             row[k] = fmt_percentage(val)
 
                 out.append(row)
@@ -571,6 +599,8 @@ class Emailer:
         recipients: List[str],
         sender_email: str,
         attachments: Optional[List[Path]] = None,
+        cc: Optional[List[str]] = None,
+        bcc: Optional[List[str]] = None,
     ) -> None:
         if "Windows" not in platform.system():
             raise RuntimeError("Envio Outlook disponível apenas no Windows com Outlook instalado.")
@@ -612,6 +642,18 @@ class Emailer:
 
         mail.HTMLBody = html
         mail.To = "; ".join(recipients)
+        
+        # Adiciona CC
+        if cc:
+            cc_clean = [e.strip() for e in cc if e and e.strip()]
+            if cc_clean:
+                mail.CC = "; ".join(cc_clean)
+        
+        # Adiciona BCC
+        if bcc:
+            bcc_clean = [e.strip() for e in bcc if e and e.strip()]
+            if bcc_clean:
+                mail.BCC = "; ".join(bcc_clean)
 
         try:
             from utils import pick_account
@@ -627,6 +669,10 @@ class Emailer:
             pass
 
         mail.Send()
+        
+        # Log melhorado
+        cc_info = f" (CC: {', '.join(cc)})" if cc else ""
+        print(f"✓ E-mail enviado via Outlook{cc_info}")
 
     def send_sendgrid(
         self,
@@ -636,6 +682,8 @@ class Emailer:
         sender_email: str,
         sender_name: str = "",
         attachments: Optional[List[Path]] = None,
+        cc: Optional[List[str]] = None,
+        bcc: Optional[List[str]] = None,
     ) -> None:
         """
         Envia e-mail via SendGrid API.
@@ -643,10 +691,12 @@ class Emailer:
         Args:
             subject: Assunto do e-mail
             html: Conteúdo HTML do e-mail
-            recipients: Lista de endereços de e-mail dos destinatários
+            recipients: Lista de endereços TO (destinatários principais)
             sender_email: E-mail do remetente
             sender_name: Nome do remetente (opcional)
             attachments: Lista de caminhos de arquivos para anexar (opcional)
+            cc: Lista de endereços em cópia (CC) (opcional)
+            bcc: Lista de endereços em cópia oculta (BCC) (opcional)
         
         Raises:
             RuntimeError: Se SENDGRID_API_KEY não estiver configurada ou houver erro no envio
@@ -663,7 +713,7 @@ class Emailer:
         
         try:
             from sendgrid import SendGridAPIClient
-            from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
+            from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition, Cc, Bcc
             import base64
         except ImportError:
             raise RuntimeError(
@@ -680,6 +730,18 @@ class Emailer:
             subject=subject,
             html_content=html
         )
+        
+        # Adiciona CC se fornecido
+        if cc:
+            for cc_email in cc:
+                if cc_email and cc_email.strip():
+                    message.add_cc(Cc(cc_email.strip()))
+        
+        # Adiciona BCC se fornecido
+        if bcc:
+            for bcc_email in bcc:
+                if bcc_email and bcc_email.strip():
+                    message.add_bcc(Bcc(bcc_email.strip()))
         
         # Adiciona anexos se houver
         if attachments:
@@ -727,8 +789,10 @@ class Emailer:
             # Envia o e-mail
             response = sg.send(message)
             
+            # Log melhorado com informação de CC
+            cc_info = f" (CC: {', '.join(cc)})" if cc else ""
             if response.status_code in (200, 202):
-                print(f"✓ E-mail enviado via SendGrid com sucesso (Status: {response.status_code})")
+                print(f"✓ E-mail enviado via SendGrid com sucesso (Status: {response.status_code}){cc_info}")
             else:
                 print(f"⚠ SendGrid retornou status {response.status_code}")
                 

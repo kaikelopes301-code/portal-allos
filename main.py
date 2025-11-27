@@ -2,11 +2,16 @@ import argparse
 import json
 import sys
 import webbrowser
+import warnings
 from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import unicodedata
 import re  # fallback de coluna
+
+# Suprime warnings do openpyxl
+warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
+warnings.filterwarnings("ignore", message=".*Data Validation extension.*")
 
 from config_loader import load_overrides, resolve_overrides, ResolvedConfig, OverrideConfigError
 from extractor import Extractor
@@ -25,6 +30,71 @@ from utils import (
     safe_parse_json,
 )
 
+def print_cache_stats():
+    """Imprime estatísticas básicas de cache."""
+    try:
+        from utils import normalize_text_full, normalize_unit
+        from processor import _norm, _key_equiv
+
+        print("\n" + "="*50)
+        print("ESTATÍSTICAS DE CACHE")
+        print("="*50)
+
+        caches = [
+            ("normalize_text_full", normalize_text_full),
+            ("normalize_unit", normalize_unit),
+            ("_norm", _norm),
+            ("_key_equiv", _key_equiv),
+        ]
+
+        total_hits = 0
+        total_misses = 0
+
+        for name, func in caches:
+            try:
+                info = func.cache_info()
+                print(f"\n{name}:")
+                print(f"  Hits:   {info.hits}")
+                print(f"  Misses: {info.misses}")
+                print(f"  Size:   {info.currsize}/{info.maxsize}")
+                if info.hits + info.misses > 0:
+                    hit_rate = (info.hits / (info.hits + info.misses)) * 100
+                    print(f"  Taxa:   {hit_rate:.1f}%")
+                total_hits += info.hits
+                total_misses += info.misses
+            except AttributeError:
+                print(f"\n{name}: (sem cache)")
+
+        if total_hits + total_misses > 0:
+            overall_rate = (total_hits / (total_hits + total_misses)) * 100
+            print("\nTOTAL:")
+            print(f"  Hits:   {total_hits}")
+            print(f"  Misses: {total_misses}")
+            print(f"  Taxa:   {overall_rate:.1f}%")
+
+        print("="*50 + "\n")
+    except Exception as e:
+        print(f"[WARN] Não foi possível obter estatísticas de cache: {e}")
+
+
+def clear_all_caches():
+    """Limpa todos os caches do sistema."""
+    try:
+        from utils import normalize_text_full, normalize_unit
+        normalize_text_full.cache_clear()
+        normalize_unit.cache_clear()
+        print("[CACHE] Cache de normalização limpo.")
+    except Exception:
+        pass
+
+    try:
+        from processor import _norm, _key_equiv
+        _norm.cache_clear()
+        _key_equiv.cache_clear()
+        print("[CACHE] Cache do processor limpo.")
+    except Exception:
+        pass
+
 COPY_PROMPTS = [
     ("greeting", "COPY_GREETING", "Saudacao"),
     ("intro", "COPY_INTRO", "Introducao"),
@@ -32,6 +102,30 @@ COPY_PROMPTS = [
     ("cta_label", "COPY_CTA_LABEL", "Rotulo do botao"),
     ("footer_signature", "COPY_FOOTER_SIGNATURE", "Rodape/assinatura"),
 ]
+
+def parse_cc_emails(env_cfg: Dict[str, str]) -> List[str]:
+    """
+    Parse CC_EMAIL do .env para lista de emails.
+    Suporta múltiplos emails separados por vírgula ou ponto e vírgula.
+    """
+    cc_raw = env_cfg.get("CC_EMAIL", "").strip()
+    if not cc_raw:
+        return []
+    
+    # Separa por vírgula ou ponto e vírgula
+    import re
+    emails = re.split(r'[,;]', cc_raw)
+    
+    # Valida e limpa emails
+    valid_emails = []
+    email_pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+    
+    for email in emails:
+        email = email.strip()
+        if email and email_pattern.match(email):
+            valid_emails.append(email)
+    
+    return valid_emails
 
 def resolve_auto_month(env_cfg: Dict[str, str], unidade: Optional[str]) -> str:
     raw = env_cfg.get("UNIT_EXCEPTIONS", "").strip()
@@ -208,12 +302,17 @@ def main() -> None:
 
     project_root = Path(__file__).resolve().parent
     env_cfg = load_env(project_root / ".env")
+    
+    # Parse CC emails do .env para incluir em todos os envios
+    cc_emails = parse_cc_emails(env_cfg)
 
     templates_dir = project_root / "templates"
     assets_dir = project_root / "assets"
     output_dir = project_root / "output_html"
     db_path = project_root / "faturamento_logs.db"
     ensure_sqlite(db_path)
+    
+    
 
     cli_mes: Optional[str] = None
     if args.mes:
@@ -541,10 +640,6 @@ def main() -> None:
                 for k in ["greeting","intro","observation","reminder","cta_label","footer_signature"]:
                     if k in portal_unit:
                         final_copy[k] = str(portal_unit.get(k) or "")
-                # SUBJECT_TEMPLATE
-                subj = portal_unit.get("SUBJECT_TEMPLATE")
-                if isinstance(subj, str):
-                    subject_template = subj
                 # texto adicional -> acrescenta ao fim da observação
                 extra_txt = str(portal_unit.get("texto", "")).strip()
                 if extra_txt:
@@ -602,6 +697,15 @@ def main() -> None:
 
             subject_template = resolved.subject_template or resolved.copy.get("SUBJECT_TEMPLATE") if resolved else None
             subject_template = copy_overrides_cli.get("SUBJECT_TEMPLATE", subject_template)
+            
+            # Override de subject_template do portal (maior prioridade)
+            nu_subj = normalize_unit(unidade)
+            portal_unit_subj = portal_overrides_norm.get(nu_subj) if nu_subj else None
+            if isinstance(portal_unit_subj, dict):
+                subj_portal = portal_unit_subj.get("subject_template") or portal_unit_subj.get("SUBJECT_TEMPLATE")
+                if isinstance(subj_portal, str) and subj_portal.strip():
+                    subject_template = subj_portal
+            
             subject = emailer.subject(
                 unidade,
                 resolved.mes_ref_final,
@@ -636,7 +740,8 @@ def main() -> None:
                         recipients=recipients,
                         sender_email=sendgrid_from,
                         sender_name=sendgrid_name,
-                        attachments=[]
+                        attachments=[],
+                        cc=cc_emails
                     )
                     print(f"[INFO] E-mail enviado via SendGrid para {unidade}")
                 else:
@@ -646,7 +751,8 @@ def main() -> None:
                         html=html,
                         recipients=recipients,
                         sender_email=sender_email,
-                        attachments=[]
+                        attachments=[],
+                        cc=cc_emails
                     )
                     print(f"[INFO] E-mail enviado via Outlook para {unidade}")
                 
@@ -733,3 +839,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    print_cache_stats()

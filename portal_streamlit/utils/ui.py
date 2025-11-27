@@ -280,7 +280,7 @@ def inject_global_styles():
     }}
     
     .stProgress > div > div {{
-        background: {COLORS['bg_tertiary']} !important;
+        background: {COLORS['primary']} !important;
         border-radius: 999px !important;
     }}
     
@@ -981,3 +981,285 @@ def render_toast(message: str, type: Literal["success", "error", "warning", "inf
         <span style="color: {COLORS['text_primary']};">{message}</span>
     </div>
     """, unsafe_allow_html=True)
+
+
+# ============================================================================
+# CONFIGURATION UI COMPONENTS
+# ============================================================================
+
+def render_column_selector(
+    all_columns: list,
+    selected_columns: list,
+    categories: dict = None,
+    search_enabled: bool = True
+) -> list:
+    """
+    Renderiza seletor de colunas com busca e categorização.
+    
+    Args:
+        all_columns: Lista de todas as colunas disponíveis
+        selected_columns: Lista de colunas atualmente selecionadas
+        categories: Dict de categorias {nome: [colunas]}
+        search_enabled: Se deve mostrar campo de busca
+        
+    Returns:
+        Lista de colunas selecionadas
+    """
+    result = selected_columns.copy()
+    
+    if search_enabled:
+        search_term = st.text_input(
+            "🔍 Buscar coluna",
+            placeholder="Digite para filtrar..."
+        )
+    else:
+        search_term = ""
+    
+    # Filtra colunas pela busca
+    filtered_columns = [
+        col for col in all_columns
+        if not search_term or search_term.lower() in col.lower()
+    ]
+    
+    if categories:
+        # Renderiza por categoria
+        for category_name, category_cols in categories.items():
+            # Filtra colunas desta categoria
+            visible_cols = [
+                col for col in category_cols
+                if col in filtered_columns
+            ]
+            
+            if visible_cols:
+                with st.expander(f"📁 {category_name} ({len(visible_cols)})", expanded=True):
+                    for col in visible_cols:
+                        is_selected = col in result
+                        checked = st.checkbox(
+                            col,
+                            value=is_selected,
+                            key=f"col_{category_name}_{col}"
+                        )
+                        
+                        if checked and col not in result:
+                            result.append(col)
+                        elif not checked and col in result:
+                            result.remove(col)
+    else:
+        # Listagem simples
+        for col in filtered_columns:
+            is_selected = col in result
+            checked = st.checkbox(col, value=is_selected, key=f"col_{col}")
+            
+            if checked and col not in result:
+                result.append(col)
+            elif not checked and col in result:
+                result.remove(col)
+    
+    return result
+
+
+def render_preset_selector(presets: dict, on_select_callback=None) -> tuple:
+    """
+    Renderiza seletor de presets de configuração.
+    
+    Args:
+        presets: Dict de presets {nome: {description, columns}}
+        on_select_callback: Função callback quando preset é selecionado
+        
+    Returns:
+        tuple: (preset_name, preset_data) ou (None, None)
+    """
+    preset_names = ["(Personalizado)"] + list(presets.keys())
+    
+    selected_preset = st.selectbox(
+        "📋 Template de Configuração",
+        options=preset_names,
+        help="Selecione um template predefinido ou personalize"
+    )
+    
+    if selected_preset and selected_preset != "(Personalizado)":
+        preset_data = presets[selected_preset]
+        
+        # Mostra descrição
+        st.info(f"ℹ️ {preset_data.get('description', '')}")
+        
+        # Mostra preview das colunas
+        cols = preset_data.get('columns', [])
+        if cols:
+            st.caption(f"**{len(cols)} colunas** serão selecionadas")
+        
+        if on_select_callback:
+            on_select_callback(selected_preset, preset_data)
+        
+        return selected_preset, preset_data
+    
+    return None, None
+
+
+def render_scope_selector(
+    unit: str,
+    region: str,
+    all_regions: list
+) -> tuple:
+    """
+    Renderiza seletor de escopo de aplicação melhorado.
+    
+    Args:
+        unit: Unidade atual
+        region: Região atual
+        all_regions: Lista de todas as regiões
+        
+    Returns:
+        tuple: (scope_type, target_description)
+    """
+    st.subheader("🎯 Escopo de Aplicação")
+    
+    scope = st.radio(
+        "Aplicar estas configurações em:",
+        options=[
+            "Somente esta unidade",
+            "Todas as unidades desta região",
+            "Todas as unidades (todas as regiões)"
+        ],
+        help="Escolha onde as configurações serão aplicadas"
+    )
+    
+    # Feedback visual
+    if scope == "Somente esta unidade":
+        st.caption(f"✓ Afetará apenas: **{unit}**")
+        target_desc = unit
+    elif scope == "Todas as unidades desta região":
+        st.caption(f"✓ Afetará todas as unidades da região **{region}**")
+        target_desc = f"Região {region}"
+    else:
+        st.caption(f"⚠️ Afetará **TODAS** as unidades de **TODAS** as regiões")
+        target_desc = "Todas as regiões"
+    
+    return scope, target_desc
+
+
+def _format_month_year(ym: str) -> str:
+    """Converte 'AAAA-MM' ou 'YYYY-MM' para 'MM/AAAA'."""
+    if ym and '-' in ym:
+        y, m = ym.split('-')
+        return f"{m}/{y}"
+    return ym
+
+
+def render_config_summary(config_data: dict, column_manager=None):
+    """
+    Renderiza resumo visual da configuração.
+    
+    Args:
+        config_data: Dados de configuração
+        column_manager: Instância do ColumnManager (opcional)
+    """
+    st.subheader("📊 Resumo da Configuração")
+    
+    cols = st.columns([1, 1, 1])
+    
+    # Mês de referência
+    with cols[0]:
+        month_ref = config_data.get("month_reference", "N/A")
+        st.metric("Mês de Referência", _format_month_year(month_ref))
+    
+    # Número de colunas
+    with cols[1]:
+        columns = config_data.get("columns", [])
+        st.metric("Colunas Selecionadas", len(columns))
+    
+    # Tipo de relatório
+    with cols[2]:
+        has_extras = any(
+            col for col in columns
+            if column_manager and column_manager.is_extra_column(col)
+        ) if column_manager else False
+        
+        report_type = "Completo" if has_extras else "Básico"
+        st.metric("Tipo de Relatório", report_type)
+    
+    # Detalhes adicionais
+    if column_manager and columns:
+        st.divider()
+        stats = column_manager.get_column_stats(columns)
+        
+        st.caption("**Por Categoria:**")
+        for category, count in stats.get("by_category", {}).items():
+            st.write(f"• {category}: {count} colunas")
+
+
+def render_config_diff(old_config: dict, new_config: dict):
+    """
+    Renderiza diferenças entre duas configurações.
+    
+    Args:
+        old_config: Configuração antiga
+        new_config: Configuração nova
+    """
+    st.subheader("🔄 Mudanças Detectadas")
+    
+    has_changes = False
+    
+    # Compara mês
+    old_month = old_config.get("month_reference")
+    new_month = new_config.get("month_reference")
+    
+    if old_month != new_month:
+        has_changes = True
+        st.warning(f"**Mês alterado:** {old_month} → {new_month}")
+    
+    # Compara colunas
+    old_cols = set(old_config.get("columns", []))
+    new_cols = set(new_config.get("columns", []))
+    
+    added = new_cols - old_cols
+    removed = old_cols - new_cols
+    
+    if added:
+        has_changes = True
+        st.success(f"**{len(added)} colunas adicionadas:**")
+        for col in added:
+            st.write(f"  + {col}")
+    
+    if removed:
+        has_changes = True
+        st.error(f"**{len(removed)} colunas removidas:**")
+        for col in removed:
+            st.write(f"  - {col}")
+    
+    if not has_changes:
+        st.info("ℹ️ Nenhuma mudança detectada")
+
+
+def render_copy_config_selector(available_units: list, current_unit: str) -> str:
+    """
+    Renderiza seletor para copiar configuração de outra unidade.
+    
+    Args:
+        available_units: Lista de unidades disponíveis
+        current_unit: Unidade atual
+        
+    Returns:
+        Nome da unidade selecionada ou None
+    """
+    # Remove unidade atual da lista
+    other_units = [u for u in available_units if u != current_unit]
+    
+    if not other_units:
+        st.warning("Nenhuma outra unidade com configuração disponível")
+        return None
+    
+    st.subheader("📋 Copiar de Outra Unidade")
+    
+    selected_unit = st.selectbox(
+        "Selecione a unidade fonte:",
+        options=["(Não copiar)"] + other_units,
+        help="Copia todas as configurações de outra unidade"
+    )
+    
+    if selected_unit and selected_unit != "(Não copiar)":
+        st.info(f"ℹ️ Configurações de **{selected_unit}** serão copiadas")
+        return selected_unit
+    
+    return None
+

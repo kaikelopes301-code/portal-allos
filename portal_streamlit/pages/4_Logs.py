@@ -1,22 +1,14 @@
 import os
 import sqlite3
-import sys
-import streamlit as st
+
 import pandas as pd
-from portal_streamlit.utils.ui import render_sidebar_branding, inject_global_styles
+import streamlit as st
+from portal_streamlit.pages import init_page
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
-
-from portal_streamlit.utils.config_manager import get_config
-
-st.set_page_config(page_title="Logs", page_icon="📒", layout="wide")
-inject_global_styles()
-render_sidebar_branding()
+# Inicialização da página
+config = init_page("Logs", "📒")
 
 st.title("Logs")
-config = get_config()
 
 db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "faturamento_logs.db"))
 

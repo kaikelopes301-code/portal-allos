@@ -1,11 +1,9 @@
-import os, sys, json
+import json
+import os
+
 import streamlit as st
-
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
-
-from portal_streamlit.utils.config_manager import get_config, get_units_overrides, save_unit_override, get_env_variable
+from portal_streamlit.pages import init_page
+from portal_streamlit.utils.config_manager import get_units_overrides, save_unit_override, get_env_variable
 from portal_streamlit.utils.pipeline import (
     get_regions,
     list_units_for_region,
@@ -14,14 +12,11 @@ from portal_streamlit.utils.pipeline import (
     list_output_html_files,
     sanitize_filename_unit,
 )
-from portal_streamlit.utils.ui import render_sidebar_branding, inject_global_styles
 
-st.set_page_config(page_title="Preview", page_icon="🧐", layout="wide")
-inject_global_styles()
-render_sidebar_branding()
+# Inicialização da página
+config = init_page("Preview", "🧐")
 
 st.title("Preview")
-config = get_config()
 
 regioes = get_regions()
 regiao = st.selectbox("Região", options=regioes, index=max(0, regioes.index(config.get("default_regiao", "SP1")) if config.get("default_regiao", "SP1") in regioes else 0))
@@ -91,6 +86,69 @@ else:
     with col2:
         observation = st.text_area("Observação", value=unit_cfg.get("observation", default_observation), height=140, key="obs_text")
 
+    # ========================================================================
+    # SEÇÃO: Assunto do Email
+    # ========================================================================
+    st.divider()
+    st.subheader("📧 Assunto do Email")
+    
+    # Importar helper de assunto
+    from portal_streamlit.utils import EmailSubjectHelper
+    
+    # Obter template padrão do .env
+    default_subject_template = get_env_variable(
+        "SUBJECT_TEMPLATE",
+        EmailSubjectHelper.get_default_template()
+    )
+    
+    # Mostrar placeholders disponíveis
+    with st.expander("ℹ️ Placeholders disponíveis (clique para ver)"):
+        placeholders = EmailSubjectHelper.get_available_placeholders()
+        st.markdown("Use placeholders entre chaves `{}` para valores dinâmicos:")
+        for key, desc in placeholders.items():
+            st.markdown(f"- `{{{key}}}` → {desc}")
+        
+        st.divider()
+        st.caption("**Exemplo:** `Medição mensal - {unidade} - {mes_extenso}`")
+    
+    # Campo de edição do template
+    subject_template = st.text_input(
+        "Template do assunto",
+        value=unit_cfg.get("subject_template", default_subject_template),
+        help="Digite o template do assunto usando {placeholders} para valores dinâmicos",
+        key="subject_template_input"
+    )
+    
+    # Validar e mostrar preview do assunto
+    if subject_template:
+        # Validar template
+        is_valid, error_msg = EmailSubjectHelper.validate_template(subject_template)
+        
+        if not is_valid:
+            st.error(f"❌ {error_msg}")
+        else:
+            # Mostrar preview renderizado
+            try:
+                # Determinar mês para preview
+                ym_for_preview = ym_sel if 'ym_sel' in locals() and ym_sel else config.get("default_mes", "2025-11")
+                
+                # Renderizar preview
+                preview_subject = EmailSubjectHelper.render_with_defaults(
+                    subject_template,
+                    unidade=unidade,
+                    mes_ref=ym_for_preview,
+                    regiao=regiao
+                )
+                
+                st.success(f"✅ Preview: **{preview_subject}**")
+                
+            except Exception as e:
+                st.warning(f"⚠️ Erro ao gerar preview: {str(e)}")
+    
+    # ========================================================================
+    # Fim da seção de assunto
+    # ========================================================================
+
     # Preview em tempo real: injeta um pequeno script para substituir os trechos no HTML carregado
         js_patch = """
         <script>
@@ -126,13 +184,37 @@ else:
     with col_a:
         auto = st.toggle("Salvar automaticamente", value=True, help="Salva as alterações imediatamente ao editar.")
         if st.button("Salvar agora"):
-            save_unit_override(unidade, {"intro": intro, "observation": observation})
-            st.success("Textos salvos.")
+            save_unit_override(unidade, {
+                "intro": intro,
+                "observation": observation,
+                "subject_template": subject_template
+            })
+            st.success("✅ Textos e assunto salvos com sucesso!")
+    
+    # Inicializar estado de salvamento se não existe
     if 'last_saved' not in st.session_state:
-        st.session_state['last_saved'] = {"intro": unit_cfg.get("intro", ""), "observation": unit_cfg.get("observation", "")}
-    # Auto-save simples: salva quando mudar e a opção estiver ativada
+        st.session_state['last_saved'] = {
+            "intro": unit_cfg.get("intro", ""),
+            "observation": unit_cfg.get("observation", ""),
+            "subject_template": unit_cfg.get("subject_template", "")
+        }
+    
+    # Auto-save: salva quando qualquer campo mudar e a opção estiver ativada
     if auto:
-        if intro != st.session_state['last_saved'].get('intro') or observation != st.session_state['last_saved'].get('observation'):
-            save_unit_override(unidade, {"intro": intro, "observation": observation})
-            st.session_state['last_saved'] = {"intro": intro, "observation": observation}
-            st.toast("Alterações salvas automaticamente.")
+        if (intro != st.session_state['last_saved'].get('intro') or
+            observation != st.session_state['last_saved'].get('observation') or
+            subject_template != st.session_state['last_saved'].get('subject_template')):
+            
+            save_unit_override(unidade, {
+                "intro": intro,
+                "observation": observation,
+                "subject_template": subject_template
+            })
+            
+            st.session_state['last_saved'] = {
+                "intro": intro,
+                "observation": observation,
+                "subject_template": subject_template
+            }
+            
+            st.toast("💾 Alterações salvas automaticamente")

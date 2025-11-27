@@ -12,9 +12,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Metrópole": {
     "columns": [
@@ -29,9 +30,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Passeio das Águas": {
     "columns": [
@@ -46,9 +48,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Goiânia": {
     "columns": [
@@ -63,9 +66,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Praça Nova Araçatuba": {
     "columns": [
@@ -80,9 +84,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Campo Limpo": {
     "columns": [
@@ -97,9 +102,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Boulevard BH": {
     "columns": [
@@ -114,9 +120,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Plaza Niterói": {
     "columns": [
@@ -131,9 +138,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Carioca Shopping": {
     "columns": [
@@ -148,11 +156,13 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10",
+    "month_reference": "2025-11",
     "intro": "Encaminhamos a medição mensal referente à Carioca Shopping. Lembramos que, antes da emissão da NF, a medição deve ser validada pela Atlas. Ressaltamos ainda que o SLA também é considerado no relatório mensal apresentado à diretoria. Solicitamos, portanto, a validação da medição e, havendo divergências, o envio das ocorrências de faltas e atrasos.",
-    "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente."
+    "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente.",
+    "subject_template": "Medição mensal - {unidade} - {mes_extenso}"
   },
   "Caxias Shopping": {
     "columns": [
@@ -167,11 +177,13 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10",
+    "month_reference": "2025-11",
     "intro": "Encaminhamos a medição mensal referente à Caxias Shopping. Lembramos que, antes da emissão da NF, a medição deve ser validada pela Atlas. Ressaltamos ainda que o SLA também é considerado no relatório mensal apresentado à diretoria. Solicitamos, portanto, a validação da medição e, havendo divergências, o envio das ocorrências de faltas e atrasos.",
-    "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente."
+    "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente.",
+    "subject_template": "Medição mensal - {unidade} - {mes_extenso}"
   },
   "Shopping Grande Rio": {
     "columns": [
@@ -186,9 +198,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Boulevard Feira de Santana": {
     "columns": [
@@ -203,9 +216,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Informação pendente": {
     "columns": [
@@ -220,9 +234,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Manauara Shopping": {
     "columns": [
@@ -237,9 +252,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Plaza Sul": {
     "columns": [
@@ -254,9 +270,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Vitória da Conquista": {
     "columns": [
@@ -271,9 +288,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Parangaba": {
     "columns": [
@@ -288,9 +306,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Rio Anil": {
     "columns": [
@@ -305,9 +324,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Taboão": {
     "columns": [
@@ -322,9 +342,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping da Bahia": {
     "columns": [
@@ -339,9 +360,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Total": {
     "columns": [
@@ -356,9 +378,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Catuaí Shopping Londrina": {
     "columns": [
@@ -373,9 +396,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10",
+    "month_reference": "2025-11",
     "intro": "Encaminhamos a medição mensal referente à Catuaí Shopping Londrina. Lembramos que, antes da emissão da NF, a medição deve ser validada pela Atlas. Ressaltamos ainda que o SLA também é considerado no relatório mensal apresentado à diretoria. Solicitamos, portanto, a validação da medição e, havendo divergências, o envio das ocorrências de faltas e atrasos.",
     "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente."
   },
@@ -392,9 +416,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Campo Grande": {
     "columns": [
@@ -409,9 +434,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Curitiba": {
     "columns": [
@@ -426,9 +452,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Tamboré": {
     "columns": [
@@ -443,9 +470,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "São Bernardo Plaza Shopping": {
     "columns": [
@@ -460,9 +488,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Boulevard Bauru": {
     "columns": [
@@ -477,9 +506,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Franca Shopping": {
     "columns": [
@@ -494,9 +524,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Praça Nova Santa Maria": {
     "columns": [
@@ -511,9 +542,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Parque Dom Pedro": {
     "columns": [
@@ -528,9 +560,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Piracicaba": {
     "columns": [
@@ -545,9 +578,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Villa Lobos": {
     "columns": [
@@ -562,9 +596,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Villagio Caxias": {
     "columns": [
@@ -579,9 +614,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Center Shopping Uberlândia": {
     "columns": [
@@ -596,9 +632,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Mooca Plaza Shopping": {
     "columns": [
@@ -613,9 +650,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Del Rey": {
     "columns": [
@@ -630,9 +668,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Estação BH": {
     "columns": [
@@ -647,9 +686,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Estação Cuiabá": {
     "columns": [
@@ -664,9 +704,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Metrô Santa Cruz": {
     "columns": [
@@ -681,9 +722,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Tijuca": {
     "columns": [
@@ -698,9 +740,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Unidade": {
     "columns": [
@@ -715,9 +758,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Bangu Shopping": {
     "columns": [
@@ -732,11 +776,13 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10",
+    "month_reference": "2025-11",
     "intro": "Encaminhamos a medição mensal referente à Bangu Shopping. Lembramos que, antes da emissão da NF, a medição deve ser validada pela Atlas. Ressaltamos ainda que o SLA também é considerado no relatório mensal apresentado à diretoria. Solicitamos, portanto, a validação da medição e, havendo divergências, o envio das ocorrências de faltas e atrasos.",
-    "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente."
+    "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente.",
+    "subject_template": " Medição mensal - {unidade} - {mes_extenso}"
   },
   "Independência Shopping": {
     "columns": [
@@ -751,9 +797,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Norte Shopping": {
     "columns": [
@@ -768,9 +815,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Passeio Shopping": {
     "columns": [
@@ -785,9 +833,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Recreio Shopping": {
     "columns": [
@@ -802,9 +851,13 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11",
+    "intro": "Encaminhamos a medição mensal referente à Recreio Shopping. Lembramos que, antes da emissão da NF, a medição deve ser validada pela Atlas. Ressaltamos ainda que o SLA também é considerado no relatório mensal apresentado à diretoria. Solicitamos, portanto, a validação da medição e, havendo divergências, o envio das ocorrências de faltas e atrasos.",
+    "observation": "Observação: caso a Nota Fiscal já tenha sido emitida sem considerar os descontos ora apontados, os valores poderão ser objeto de desconto retroativo na competência subsequente.",
+    "subject_template": "Medição mensal - {unidade} - {mes_extenso}"
   },
   "Rio Design Leblon": {
     "columns": [
@@ -819,9 +872,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Leblon": {
     "columns": [
@@ -836,9 +890,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Shopping Vila Velha": {
     "columns": [
@@ -853,9 +908,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Amazonas Shopping": {
     "columns": [
@@ -870,9 +926,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Boulevard Belém": {
     "columns": [
@@ -887,9 +944,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Cariri Shopping": {
     "columns": [
@@ -904,9 +962,10 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   },
   "Parque Shopping Belém": {
     "columns": [
@@ -921,8 +980,9 @@
       "Desc. Atraso Validado Atlas",
       "Desconto SLA Mês",
       "Valor Mensal Final",
-      "Mês de emissão da NF"
+      "Mês de emissão da NF",
+      "Mês de referência para faturamento"
     ],
-    "month_reference": "2025-10"
+    "month_reference": "2025-11"
   }
 }

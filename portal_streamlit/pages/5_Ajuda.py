@@ -1,9 +1,8 @@
 import streamlit as st
-from portal_streamlit.utils.ui import render_sidebar_branding, inject_global_styles
+from portal_streamlit.pages import init_page
 
-st.set_page_config(page_title="Ajuda", page_icon="ℹ️", layout="wide")
-inject_global_styles()
-render_sidebar_branding()
+# Inicialização da página
+config = init_page("Ajuda", "ℹ️")
 
 st.title("Ajuda e Dicas")
 
