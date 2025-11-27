@@ -3,3 +3,5 @@ projeto.zip
 *.zip
 
 # Variaveis de ambiente
+env
+.env
